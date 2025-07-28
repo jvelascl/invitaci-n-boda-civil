@@ -1,87 +1,95 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Invitación de Boda - Selena & David</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selena & David - Invitación de Boda</title>
   <style>
     body {
       font-family: 'Georgia', serif;
-      background-color: #f9f9f9;
-      color: #333;
-      padding: 2rem;
-      max-width: 600px;
+      background-color: #fff9f9;
+      color: #2e1a1a;
+      margin: 0;
+      padding: 0;
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Light_grey_background.jpg/1920px-Light_grey_background.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+    .container {
+      max-width: 700px;
       margin: auto;
-      border: 1px solid #ddd;
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 2rem;
       border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     }
     h1, h2, h3 {
       text-align: center;
-      color: #8B0000;
+      color: #7b1e1e;
     }
-    p, li {
+    p {
       line-height: 1.6;
-    }
-    .fecha, .lugar {
-      font-weight: bold;
       text-align: center;
-      margin-top: 1rem;
     }
-    .rsvp {
-      margin-top: 2rem;
+    .photo {
+      text-align: center;
+      margin: 2rem 0;
+    }
+    .photo img {
+      max-width: 100%;
+      border-radius: 12px;
+      filter: grayscale(100%);
+    }
+    .button {
+      display: block;
+      width: 80%;
+      margin: 1rem auto;
+      text-align: center;
       padding: 1rem;
-      background-color: #f2e6e6;
-      border-left: 5px solid #8B0000;
+      background-color: #7b1e1e;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+    .button:hover {
+      background-color: #5c1515;
     }
     .footer {
-      margin-top: 2rem;
       text-align: center;
-      font-size: 0.9rem;
-      color: #777;
+      font-size: 0.8rem;
+      color: #666;
+      margin-top: 2rem;
     }
-    a {
-      color: #8B0000;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
+    iframe {
+      display: block;
+      margin: 2rem auto;
     }
   </style>
 </head>
 <body>
-  <h1>Selena & David</h1>
-  <h2>¡Nos casamos!</h2>
+  <div class="container">
+    <h1>Selena & David</h1>
+    <h2>24 de octubre de 2024</h2>
 
-  <p>Nos emociona compartir este momento tan especial contigo. Acompáñanos a celebrar nuestro amor.</p>
+    <p><em>Desde el 24 de octubre de 2016 caminamos juntos, con amor, complicidad y sueños compartidos. Hoy, nuestro viaje continúa hacia siempre.</em></p>
 
-  <div class="fecha">
-    📅 <strong>24 de octubre de 2016</strong><br>
-    🕓 <strong>17:00 horas</strong>
-  </div>
+    <div class="photo">
+      <img src="https://jvelascl.github.io/invitacion-selena-david/foto_bn.png" alt="Foto de los novios">
+    </div>
 
-  <div class="lugar">
-    📍 <strong>Hacienda El Olivo, Toledo</strong><br>
-    <a href="https://www.google.com/maps" target="_blank">Ver ubicación en Google Maps</a>
-  </div>
+    <p>Nos emociona compartir contigo este día tan especial. Te esperamos para celebrar nuestro amor con una ceremonia y fiesta inolvidables.</p>
 
-  <p style="text-align: center; margin-top: 2rem;">
-    Tras la ceremonia, celebraremos con una cena y fiesta inolvidable.
-  </p>
+    <a class="button" href="https://maps.app.goo.gl/QbqkbVA79ki8s6wp8" target="_blank">Ver Ubicación del Evento</a>
 
-  <div class="rsvp">
-    <h3>Confirmación de asistencia (RSVP)</h3>
-    <p>Por favor confírmanos tu asistencia antes del <strong>1 de octubre</strong>:</p>
-    <ul>
-      <li>📞 Teléfono: 600 123 456</li>
-      <li>✉️ Email: <a href="mailto:selena.david.boda@gmail.com">selena.david.boda@gmail.com</a></li>
-      <li>📝 <a href="https://forms.gle" target="_blank">Formulario de confirmación</a></li>
-    </ul>
-  </div>
+    <a class="button" href="https://wa.me/34600123456?text=Hola%2C%20confirmo%20mi%20asistencia%20a%20la%20boda%20de%20Selena%20y%20David%20el%2024%20de%20octubre.%20%C2%A1Gracias%20por%20la%20invitaci%C3%B3n!" target="_blank">Confirmar Asistencia por WhatsApp</a>
 
-  <div class="footer">
-    Con cariño,<br>
-    Selena & David
+    <iframe width="100%" height="100" src="https://www.youtube.com/embed/NRBjvYnPbrs?autoplay=1&loop=1&playlist=NRBjvYnPbrs" title="Canción para la boda" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+    <div class="footer">
+      Con cariño,<br />
+      Selena & David
+    </div>
   </div>
 </body>
 </html>
