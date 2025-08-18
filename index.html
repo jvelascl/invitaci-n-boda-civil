@@ -11,18 +11,20 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      height: 100vh;
     }
-    video {
-      max-width: 100%;
-      height: auto;
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
     }
   </style>
 </head>
 <body>
-  <video controls autoplay muted playsinline>
-    <source src="invitación_boda.mp4" type="video/mp4">
-    Tu navegador no admite reproducción de video.
-  </video>
+  <iframe 
+    src="https://www.canva.com/design/DAGvIIxZ3cE/A3NMSDbsXNr5zFCNX3VBHg/watch?embed" 
+    allowfullscreen
+    loading="lazy">
+  </iframe>
 </body>
 </html>
