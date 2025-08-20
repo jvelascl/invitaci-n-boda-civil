@@ -12,9 +12,9 @@
   <style>
     :root{ 
       --max-width: 840px;
-      --vino:#7b0d1e;      /* granate */
+      --vino:#5a0a16;      /* granate más oscuro */
       --dorado:#c9a24e;    /* dorado suave */
-      --negro:#2b2b2b;     /* negro cálido */
+      --negro:#1a1a1a;     /* etiquetas más oscuras */
     }
     *{box-sizing:border-box}
     html,body{margin:0;background:#0b0b0b;color:#111;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
@@ -34,34 +34,34 @@
     #hs-map   { left:53%;   top:38.7%;   width:25%; height:1%; }
     #hs-form  { left:57%;   top:47.7%;   width:25%; height:1.1%; }
 
-    /* === Contador estilizado (más bajo, más separación) === */
+    /* === Contador estilizado (ajustes finales) === */
     .cd-wrap{
       position:absolute; left:0; width:100%;
-      top: calc(95% + 48px);  /* bajado 3 “espacios” más */
+      top: calc(95% + 32px);  /* subido un espacio respecto a antes */
       text-align:center;
     }
     .countdown{
-      display:flex; justify-content:center; align-items:baseline; gap:1rem; /* más separación */
+      display:flex; justify-content:center; align-items:baseline; gap:1rem;
       font-variant-numeric:tabular-nums;
     }
     .cd-num{
-      font-family: 'Oswald', sans-serif; /* números alargados */
+      font-family: 'Oswald', sans-serif; 
       font-size:2.3rem; 
       font-weight:500; 
       color:var(--vino);
       line-height:1;
       letter-spacing:.02em;
-      min-width: 2ch;       /* asegura ancho para 0X */
-      text-align: center;
+      min-width: 2ch;
+      text-align:center;
     }
     .cd-label{
-      display:block; font-size:1.25rem;  /* +3pt aprox. */
-      color:var(--negro); opacity:.9; margin-top:.18rem;
-      font-family: 'Dancing Script', cursive; /* manuscrita */
+      display:block; font-size:1.35rem;  /* +1 punto */
+      color:var(--negro); opacity:.95; margin-top:.18rem;
+      font-family: 'Dancing Script', cursive;
     }
     .cd-sep{
       font-size:2.3rem; font-weight:500; line-height:1;
-      color:var(--vino);                /* mismo color que los números */
+      color:var(--vino);
       font-family: 'Oswald', sans-serif;
       transform: translateY(2px);
       min-width: 1ch; text-align:center;
@@ -71,7 +71,7 @@
       .countdown{gap:.8rem}
       .cd-num{font-size:2rem}
       .cd-sep{font-size:2rem}
-      .cd-label{font-size:1.1rem}
+      .cd-label{font-size:1.2rem}
     }
   </style>
 </head>
@@ -181,9 +181,9 @@
           elH.textContent = '00';
           return true;
         } else {
-          elM.textContent = String(months).padStart(2,'0');  // opcional con cero a la izquierda
-          elD.textContent = String(days).padStart(2,'0');    // solicitado
-          elH.textContent = String(hours).padStart(2,'0');   // solicitado
+          elM.textContent = String(months).padStart(2,'0');
+          elD.textContent = String(days).padStart(2,'0');
+          elH.textContent = String(hours).padStart(2,'0');
           return false;
         }
       }
