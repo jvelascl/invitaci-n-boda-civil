@@ -1,65 +1,88 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Invitación de Boda</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Invitación – David & Selena</title>
+  <meta name="description" content="Invitación interactiva con audio y enlaces" />
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background-color: #fdfaf6;
-      font-family: 'Segoe UI', sans-serif;
-    }
-    .canva-embed-container {
-      position: relative;
-      width: 100%;
-      height: 0;
-      padding-top: 708.6614%;
-      box-shadow: 0 2px 8px rgba(63, 69, 81, 0.16);
-      margin-top: 1.6em;
-      margin-bottom: 0.9em;
-      overflow: hidden;
-      border-radius: 8px;
-      will-change: transform;
-    }
-    .canva-embed-container iframe {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      border: none;
-      padding: 0;
-      margin: 0;
-    }
-    .canva-link {
-      display: block;
-      text-align: center;
-      margin-top: 10px;
-      color: #c2185b;
-      font-weight: bold;
-      text-decoration: none;
-    }
+    :root{ --max-width: 840px; }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:#0b0b0b;color:#111;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+
+    /* Lienzo vertical responsive (recuadro largo) */
+    .stage{position:relative;width:min(100vw,var(--max-width));margin:16px auto;border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.35);background:#000}
+    .bg{display:block;width:100%;height:auto}
+
+    /* Capa de hotspots encima del arte */
+    .hotspot{position:absolute;display:inline-block}
+    .hotspot a{display:block;width:100%;height:100%;text-indent:-9999px;overflow:hidden}
+
+    /* Controles opcionales (por si quieres mantener botones visibles además del hotspot de música) */
+    .controls{position:absolute;left:50%;top:10%;transform:translateX(-50%);display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.92);border-radius:999px;padding:10px 14px;box-shadow:0 8px 24px rgba(0,0,0,.25);display:none}
+    .btn{border:0;border-radius:999px;padding:8px 12px;cursor:pointer;background:#fff;font-weight:600}
+    .btn:focus{outline:3px solid #4c9ffe;outline-offset:2px}
+
+    /* === Hotspots calculados a partir de Boda.jpg (288x2048) === */
+    /* Música (icono ▶) */
+    #hs-music { left:45.1%; top:21%; width:10.4%; height:1.5%; }
+    /* Agenda la fecha */
+    #hs-cal   { left:13.9%; top:31.2%; width:34.7%; height:1.4%; }
+    /* Ver mapa */
+    #hs-map   { left:59%;   top:40%;   width:34.7%; height:1.4%; }
+    /* Confirmar asistencia */
+    #hs-form  { left:59%;   top:52.2%; width:34.7%; height:1.4%; }
   </style>
 </head>
 <body>
+  <main class="stage" aria-label="Invitación interactiva">
+    <!-- Fondo: usa el JPG exacto que compartiste -->
+    <img class="bg" src="assets/Boda.jpg" alt="Invitación David y Selena" id="bg"/>
 
-  <div class="canva-embed-container">
-    <iframe loading="lazy" 
-      src="https://www.canva.com/design/DAGvIIxZ3cE/A3NMSDbsXNr5zFCNX3VBHg/watch?embed" 
-      allowfullscreen="allowfullscreen" 
-      allow="fullscreen">
-    </iframe>
-  </div>
+    <!-- Audio: pista musical -->
+    <audio id="media" preload="metadata">
+      <source src="assets/musica.mp3" type="audio/mpeg"/>
+      Tu navegador no soporta audio HTML5.
+    </audio>
 
-  <a class="canva-link"
-     href="https://www.canva.com/design/DAGvIIxZ3cE/A3NMSDbsXNr5zFCNX3VBHg/watch?utm_content=DAGvIIxZ3cE&amp;utm_campaign=designshare&amp;utm_medium=embeds&amp;utm_source=link"
-     target="_blank"
-     rel="noopener">
-     Ver en Canva (por si no se carga correctamente)
-  </a>
+    <!-- Controles opcionales visibles (puedes activar display:flex en .controls si los quieres además del hotspot) -->
+    <div class="controls" id="controls">
+      <button class="btn" id="play">▶︎ Reproducir</button>
+      <button class="btn" id="mute">🔊</button>
+    </div>
 
+    <!-- Hotspots -->
+    <div id="hs-music" class="hotspot"><a href="#" onclick="toggleMusic(); return false;" aria-label="Reproducir/Pausar música">Reproducir música</a></div>
+    <div id="hs-cal" class="hotspot"><a href="https://calendar.app.google/L6ciMkGSfXdSb6ju7" target="_blank" rel="noopener">Agenda la fecha</a></div>
+    <div id="hs-map" class="hotspot"><a href="https://maps.app.goo.gl/P5i7W7WSzFhvjFDs9" target="_blank" rel="noopener">Ver mapa</a></div>
+    <div id="hs-form" class="hotspot"><a href="https://docs.google.com/forms/d/e/1FAIpQLSdmN66lbqBq6saBTdLBhs7DRX55u6N_YkGAtVkXV1Ysww89ZQ/viewform?usp=header" target="_blank" rel="noopener">Confirmar asistencia</a></div>
+  </main>
+
+  <script>
+    const media = document.getElementById('media');
+    const playBtn = document.getElementById('play');
+    const muteBtn = document.getElementById('mute');
+
+    function toggleMusic(){
+      // Reproduce o pausa la pista al pulsar sobre el icono de la invitación
+      if(media.paused){ media.play(); }
+      else{ media.pause(); }
+    }
+
+    // Si decides mostrar los botones visibles (cambia display:none a display:flex en .controls):
+    if(playBtn && muteBtn){
+      playBtn?.addEventListener('click', async () => {
+        try{
+          if (media.paused){ await media.play(); playBtn.textContent='⏸︎ Pausar'; }
+          else{ media.pause(); playBtn.textContent='▶︎ Reproducir'; }
+        }catch(e){ console.warn('No se pudo reproducir:', e); }
+      });
+      muteBtn?.addEventListener('click', () => {
+        media.muted = !media.muted;
+        muteBtn.textContent = media.muted ? '🔇' : '🔊';
+      });
+    }
+  </script>
 </body>
 </html>
+
