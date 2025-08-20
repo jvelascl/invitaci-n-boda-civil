@@ -39,10 +39,10 @@
       --cd-txt: #5b4227;  /* texto marrón/dorado */
       --cd-muted: #755a3a;/* etiquetas */
     }
-    #countdown .cd-wrap{display:flex; justify-content:space-between; align-items:center; gap:8px; background:var(--cd-bg); padding:8px 10px; border-radius:14px; box-shadow:none;}
-    #countdown .box{flex:1; background:rgba(255,255,255,.0); border-radius:10px; padding:6px 4px}
+    #countdown .cd-wrap{display:flex; justify-content:space-between; align-items:flex-end; gap:12px; background:transparent; padding:0; border-radius:0; box-shadow:none;}
+    #countdown .box{flex:1; padding:0; background:transparent; border-radius:0;}
     #countdown .num{display:block; font-weight:800; color:var(--cd-txt); font-size:clamp(23px, 5.2vw, 33px); line-height:1}
-    #countdown .lbl{display:block; color:var(--cd-muted); font-weight:600; font-size:clamp(18px, 4.0vw, 20px); letter-spacing:.02em}
+    #countdown .lbl{display:block; color:var(--cd-muted); font-weight:600; font-size:clamp(18px, 4.0vw, 20px); letter-spacing:.02em; margin-top:2px;}
     #countdown .cd-wrap{display:flex; justify-content:space-between; align-items:center; gap:8px; background:rgba(255,255,255,.85); padding:6px 10px; border-radius:12px; box-shadow:0 6px 16px rgba(0,0,0,.15)}
     #countdown .box{flex:1}
     #countdown .num{display:block; font-weight:800; font-size:clamp(14px, 3.6vw, 22px); line-height:1}
@@ -160,3 +160,4 @@
   </script>
 </body>
 </html>
+
