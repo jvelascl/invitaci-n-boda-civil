@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Invitación – David & Selena</title>
   <meta name="description" content="Invitación interactiva con audio y enlaces" />
+
+  <!-- Fuentes: Oswald (números alargados) + Dancing Script (etiquetas manuscritas) -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Oswald:wght@500&display=swap" rel="stylesheet">
+
   <style>
     :root{ 
       --max-width: 840px;
@@ -30,24 +34,40 @@
     #hs-map   { left:53%;   top:38.7%;   width:25%; height:1%; }
     #hs-form  { left:57%;   top:47.7%;   width:25%; height:1.1%; }
 
-    /* === Contador minimalista === */
+    /* === Contador estilizado === */
     .cd-wrap{
-      position:absolute; left:20%; top:95%; width:60%;
+      position:absolute; left:0; width:100%;
+      top: calc(95% + 24px);  /* más abajo del diseño */
       text-align:center;
     }
     .countdown{
-      display:flex; justify-content:center; align-items:flex-end; gap:.5rem;
+      display:flex; justify-content:center; align-items:baseline; gap:.55rem;
       font-variant-numeric:tabular-nums;
     }
     .cd-num{
-      font-size:2rem; font-weight:700; color:var(--vino);
+      font-family: 'Oswald', sans-serif; /* números alargados */
+      font-size:2.3rem; /* +2 puntos respecto a antes */
+      font-weight:500; 
+      color:var(--vino);
+      line-height:1;
+      letter-spacing:.02em;
     }
     .cd-label{
-      display:block; font-size:.72rem; color:var(--negro); opacity:.8;
-      margin-top:.2rem;
+      display:block; font-size:1rem; color:var(--negro); opacity:.9; margin-top:.18rem;
+      font-family: 'Dancing Script', cursive; /* manuscrita */
     }
     .cd-sep{
-      font-size:2rem; font-weight:700; color:var(--dorado);
+      font-size:2.3rem; font-weight:500; line-height:1;
+      color:var(--vino);
+      font-family: 'Oswald', sans-serif;
+      transform: translateY(2px);
+    }
+
+    @media (max-width: 420px){
+      .countdown{gap:.45rem}
+      .cd-num{font-size:2rem}
+      .cd-sep{font-size:2rem}
+      .cd-label{font-size:.9rem}
     }
   </style>
 </head>
@@ -77,12 +97,12 @@
           <span class="cd-num" id="cd-months">0</span>
           <span class="cd-label">Meses</span>
         </div>
-        <span class="cd-sep">:</span>
+        <span class="cd-sep" aria-hidden="true">:</span>
         <div>
           <span class="cd-num" id="cd-days">0</span>
           <span class="cd-label">Días</span>
         </div>
-        <span class="cd-sep">:</span>
+        <span class="cd-sep" aria-hidden="true">:</span>
         <div>
           <span class="cd-num" id="cd-hours">0</span>
           <span class="cd-label">Horas</span>
