@@ -1,5 +1,4 @@
-
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
@@ -7,14 +6,7 @@
   <title>Invitación – David & Selena</title>
   <meta name="description" content="Invitación interactiva con audio y enlaces" />
   <style>
-    :root{ 
-      --max-width: 840px;
-
-      /* Colores del contador, ajustados al estilo crema/marrón de la invitación */
-      --cd-bg: #f3e8d2;   /* fondo crema */
-      --cd-txt: #6b4e2e;  /* números */
-      --cd-muted: #8a6a44;/* etiquetas */
-    }
+    :root{ --max-width: 840px; }
     *{box-sizing:border-box}
     html,body{margin:0;background:#0b0b0b;color:#111;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
 
@@ -33,20 +25,31 @@
 
     /* === Hotspots calculados a partir de Boda.jpg (288x2048) === */
     /* Música (icono ▶) */
-    #hs-music { left:70%; top:13.4%; width:7.1%; height:1%; }
+    #hs-music { left:45.1%; top:21%; width:10.4%; height:1.5%; }
     /* Agenda la fecha */
-    #hs-cal   { left:13.9%; top:33.4%; width:28%; height:1.1%; }
+    #hs-cal   { left:13.9%; top:31.2%; width:34.7%; height:1.4%; }
     /* Ver mapa */
-    #hs-map   { left:53%;   top:38.7%;   width:25%; height:1%; }
+    #hs-map   { left:59%;   top:40%;   width:34.7%; height:1.4%; }
     /* Confirmar asistencia */
-    #hs-form  { left:57%;   top:47.7%; width:25%; height:1.1%; }
+    #hs-form  { left:59%;   top:52.2%; width:34.7%; height:1.4%; }
+    /* === Cuenta regresiva === */
+    #countdown{position:absolute; left:30%; top:95.2%; width:40%; text-align:center; pointer-events:none;}
+    :root{
+      --cd-bg: transparent;   /* fondo tipo crema (a juego con la invitación) */
+      --cd-txt: #5b4227;  /* texto marrón/dorado */
+      --cd-muted: #755a3a;/* etiquetas */
+    }
+    #countdown .cd-wrap{display:flex; justify-content:space-between; align-items:center; gap:8px; background:var(--cd-bg); padding:8px 10px; border-radius:14px; box-shadow:none;}
+    #countdown .box{flex:1; background:rgba(255,255,255,.0); border-radius:10px; padding:6px 4px}
+    #countdown .num{display:block; font-weight:800; color:var(--cd-txt); font-size:clamp(23px, 5.2vw, 33px); line-height:1}
+    #countdown .lbl{display:block; color:var(--cd-muted); font-weight:600; font-size:clamp(18px, 4.0vw, 20px); letter-spacing:.02em}
+    #countdown .cd-wrap{display:flex; justify-content:space-between; align-items:center; gap:8px; background:rgba(255,255,255,.85); padding:6px 10px; border-radius:12px; box-shadow:0 6px 16px rgba(0,0,0,.15)}
+    #countdown .box{flex:1}
+    #countdown .num{display:block; font-weight:800; font-size:clamp(14px, 3.6vw, 22px); line-height:1}
+    #countdown .lbl{display:block; font-size:clamp(10px, 2.5vw, 12px); opacity:.7; letter-spacing:.02em}
 
-    /* === Cuenta regresiva (meses, días, horas) === */
-    #countdown{position:absolute; left:30%; top:95.2%; width:40%; text-align:center;}
-    #countdown .cd-wrap{display:flex; justify-content:space-between; align-items:center; gap:8px; background:var(--cd-bg); padding:8px 10px; border-radius:14px; box-shadow:0 6px 16px rgba(0,0,0,.12)}
-    #countdown .box{flex:1; border-radius:10px; padding:6px 4px}
-    #countdown .num{display:block; font-weight:800; color:var(--cd-txt); font-size:clamp(16px, 4.2vw, 26px); line-height:1}
-    #countdown .lbl{display:block; color:var(--cd-muted); font-weight:600; font-size:clamp(11px, 3.0vw, 13px); letter-spacing:.02em}
+    /* (Opcional) ampliar hitboxes para facilitar el toque en móvil */
+    #hs-cal, #hs-map, #hs-form { height:2.2%; }
   </style>
 </head>
 <body>
@@ -54,12 +57,11 @@
     <!-- Fondo: usa el JPG exacto que compartiste -->
     <img class="bg" src="assets/Boda.jpg" alt="Invitación David y Selena" id="bg"/>
 
-    <!-- Vídeo MP4 (solo para audio). Lo mantenemos oculto visualmente pero presente en el DOM. -->
-    <!-- playsinline evita pantalla completa en móvil; sin controles nativos para que no tape nada. -->
-    <video id="media" preload="metadata" playsinline style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" aria-hidden="true">
-      <source src="assets/musica.mp4" type="video/mp4"/>
-      Tu navegador no soporta vídeo HTML5.
-    </video>
+    <!-- Audio: pista musical -->
+    <audio id="media" preload="metadata">
+      <source src="assets/musica.mp3" type="audio/mpeg"/>
+      Tu navegador no soporta audio HTML5.
+    </audio>
 
     <!-- Controles opcionales visibles (puedes activar display:flex en .controls si los quieres además del hotspot) -->
     <div class="controls" id="controls">
@@ -72,8 +74,7 @@
     <div id="hs-cal" class="hotspot"><a href="https://calendar.app.google/L6ciMkGSfXdSb6ju7" target="_blank" rel="noopener">Agenda la fecha</a></div>
     <div id="hs-map" class="hotspot"><a href="https://maps.app.goo.gl/P5i7W7WSzFhvjFDs9" target="_blank" rel="noopener">Ver mapa</a></div>
     <div id="hs-form" class="hotspot"><a href="https://docs.google.com/forms/d/e/1FAIpQLSdmN66lbqBq6saBTdLBhs7DRX55u6N_YkGAtVkXV1Ysww89ZQ/viewform?usp=header" target="_blank" rel="noopener">Confirmar asistencia</a></div>
-
-    <!-- Cuenta regresiva -->
+      <!-- Cuenta regresiva superpuesta -->
     <div id="countdown" aria-label="Cuenta regresiva">
       <div class="cd-wrap">
         <div class="box"><span id="cd-months" class="num">0</span><span class="lbl">meses</span></div>
@@ -88,15 +89,9 @@
     const playBtn = document.getElementById('play');
     const muteBtn = document.getElementById('mute');
 
-    function ensureUnmutedOnFirstPlay(){
-      // Algunos móviles solo permiten reproducir con sonido tras interacción.
-      // Este toggle se llama desde el click del usuario, así que podemos quitar mute si hiciera falta.
-      if (media.muted) media.muted = false;
-    }
-
     function toggleMusic(){
-      ensureUnmutedOnFirstPlay();
-      if(media.paused){ media.play().catch(e=>console.warn('No se pudo reproducir:', e)); }
+      // Reproduce o pausa la pista al pulsar sobre el icono de la invitación
+      if(media.paused){ media.play(); }
       else{ media.pause(); }
     }
 
@@ -104,7 +99,6 @@
     if(playBtn && muteBtn){
       playBtn?.addEventListener('click', async () => {
         try{
-          ensureUnmutedOnFirstPlay();
           if (media.paused){ await media.play(); playBtn.textContent='⏸︎ Pausar'; }
           else{ media.pause(); playBtn.textContent='▶︎ Reproducir'; }
         }catch(e){ console.warn('No se pudo reproducir:', e); }
@@ -114,8 +108,7 @@
         muteBtn.textContent = media.muted ? '🔇' : '🔊';
       });
     }
-
-    // ====== Cuenta regresiva (meses, días y horas) ======
+      // ====== Cuenta regresiva (meses, días y horas) ======
     // Fecha/hora del evento en Madrid (CET/CEST). Ajusta si cambia.
     const TARGET = new Date('2025-11-29T17:00:00+01:00');
 
@@ -125,7 +118,9 @@
 
     function monthsDiff(from, to){
       let months = (to.getFullYear() - from.getFullYear()) * 12 + (to.getMonth() - from.getMonth());
+      // ancla: from + months
       let anchor = new Date(from.getFullYear(), from.getMonth() + months, from.getDate(), from.getHours(), from.getMinutes(), from.getSeconds());
+      // si nos pasamos del target, retrocede un mes
       while (anchor > to) {
         months--;
         anchor = new Date(from.getFullYear(), from.getMonth() + months, from.getDate(), from.getHours(), from.getMinutes(), from.getSeconds());
@@ -154,13 +149,10 @@
       dEl.textContent  = String(days);
       hEl.textContent  = String(hours).padStart(2,'0');
 
-      // Pluralización simple
-      const mLbl = document.querySelector('#cd-months + .lbl');
-      const dLbl = document.querySelector('#cd-days + .lbl');
-      const hLbl = document.querySelector('#cd-hours + .lbl');
-      if (mLbl) mLbl.textContent = (md.months === 1 ? 'mes' : 'meses');
-      if (dLbl) dLbl.textContent = (days === 1 ? 'día' : 'días');
-      if (hLbl) hLbl.textContent = (hours === 1 ? 'hora' : 'horas');
+      // Pluralización simple (opcional)
+      document.querySelector('#cd-months + .lbl').textContent = (md.months === 1 ? 'mes' : 'meses');
+      document.querySelector('#cd-days + .lbl').textContent   = (days === 1 ? 'día' : 'días');
+      document.querySelector('#cd-hours + .lbl').textContent  = (hours === 1 ? 'hora' : 'horas');
     }
 
     updateCountdown();
