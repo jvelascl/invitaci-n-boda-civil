@@ -60,7 +60,8 @@
     .hint{
       position:absolute; z-index:5; pointer-events:none;
       user-select:none; transition:opacity .35s ease; opacity:.95;
-      font-size:1.8rem; line-height:1; color:var(--dorado); /* dorado que combina */
+      font-size:1.8rem; line-height:1; 
+      color:#6b4e2e;   /* marrón café */
       filter: drop-shadow(0 2px 4px rgba(0,0,0,.35));
       transform-origin: center;
       animation: hint-bounce 1.2s infinite;
@@ -160,7 +161,7 @@
         const cy = hsRect.top  + hsRect.height/2;
 
         // Colocar mano DEBAJO a la izquierda
-        const dx = -40;  // más a la izquierda
+        const dx = -50;  // más a la izquierda
         const dy = +28;  // debajo del círculo
 
         const left = cx + dx - stageRect.left;
