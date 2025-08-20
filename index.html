@@ -161,6 +161,42 @@
       document.querySelector('#cd-hours + .lbl').textContent  = (hours === 1 ? 'hora' : 'horas');
     }
 
+    /* FORZAR estilo del contador sin caja */
+#countdown, #countdown * {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+#countdown { 
+  position: absolute; left:30%; top: calc(95.2% + 3px); width:40%;
+  text-align:center; pointer-events:none; z-index:5;
+}
+#countdown .cd-wrap{
+  display:flex; align-items:flex-end; gap:0; padding:0;
+}
+#countdown .box{ flex:0 0 auto; text-align:center; padding:0; }
+#countdown .num{
+  display:block; font-weight:800; color:#000;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(38px, 9.5vw, 62px);
+  line-height:1;
+  transform: scaleY(1.25);        /* alargado vertical */
+  transform-origin: center bottom;
+}
+#countdown .lbl{
+  display:block; color:#000; font-weight:700;
+  font-size: clamp(14px, 3.4vw, 18px);
+  letter-spacing:.06em; text-transform:none; margin-top:6px;
+}
+#countdown .box + .box::before{
+  content: ":"; display:inline-block; margin:0 10px; font-weight:800; color:#000;
+  font-size: clamp(36px, 9vw, 60px);
+  line-height:1;
+  transform: translateY(-4px) scaleY(1.25);
+  transform-origin: center bottom;
+  pointer-events:none;
+}
+
     updateCountdown();
     setInterval(updateCountdown, 1000);
   </script>
