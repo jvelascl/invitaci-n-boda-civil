@@ -114,63 +114,56 @@
       });
     }
 
-   // ====== Cuenta regresiva (meses, días y horas) ======
-// Fecha/hora del evento en Madrid (CET/CEST). Ajusta si cambia.
-const TARGET = new Date('2025-11-29T17:00:00+01:00');
+ // ====== Cuenta regresiva (meses, días y horas) ======
+    // Fecha/hora del evento en Madrid (CET/CEST). Ajusta si cambia.
+    const TARGET = new Date('2025-11-29T17:00:00+01:00');
 
+    const moEl = document.getElementById('cd-months');
+    const dEl  = document.getElementById('cd-days');
+    const hEl  = document.getElementById('cd-hours');
 
-const moEl = document.getElementById('cd-months');
-const dEl = document.getElementById('cd-days');
-const hEl = document.getElementById('cd-hours');
+    function monthsDiff(from, to){
+      let months = (to.getFullYear() - from.getFullYear()) * 12 + (to.getMonth() - from.getMonth());
+      // ancla: from + months
+      let anchor = new Date(from.getFullYear(), from.getMonth() + months, from.getDate(), from.getHours(), from.getMinutes(), from.getSeconds());
+      // si nos pasamos del target, retrocede un mes
+      while (anchor > to) {
+        months--;
+        anchor = new Date(from.getFullYear(), from.getMonth() + months, from.getDate(), from.getHours(), from.getMinutes(), from.getSeconds());
+      }
+      return { months, anchor };
+    }
 
+    function updateCountdown(){
+      const now = new Date();
+      if (TARGET <= now){
+        moEl.textContent = '0';
+        dEl.textContent  = '0';
+        hEl.textContent  = '0';
+        return;
+      }
+      const md = monthsDiff(now, TARGET);
+      const afterMonths = md.anchor;
+      let msLeft = TARGET - afterMonths;
+      const dayMs = 24*60*60*1000;
+      const hourMs = 60*60*1000;
 
-function monthsDiff(from, to){
-let months = (to.getFullYear() - from.getFullYear()) * 12 + (to.getMonth() - from.getMonth());
-// ancla: from + months
-let anchor = new Date(from.getFullYear(), from.getMonth() + months, from.getDate(), from.getHours(), from.getMinutes(), from.getSeconds());
-// si nos pasamos del target, retrocede un mes
-while (anchor > to) {
-months--;
-anchor = new Date(from.getFullYear(), from.getMonth() + months, from.getDate(), from.getHours(), from.getMinutes(), from.getSeconds());
-}
-return { months, anchor };
-}
+      const days = Math.floor(msLeft / dayMs); msLeft -= days * dayMs;
+      const hours = Math.floor(msLeft / hourMs);
 
+      moEl.textContent = String(md.months);
+      dEl.textContent  = String(days);
+      hEl.textContent  = String(hours).padStart(2,'0');
 
-function updateCountdown(){
-const now = new Date();
-if (TARGET <= now){
-moEl.textContent = '0';
-dEl.textContent = '0';
-hEl.textContent = '0';
-return;
-}
-const md = monthsDiff(now, TARGET);
-const afterMonths = md.anchor;
-let msLeft = TARGET - afterMonths;
-const dayMs = 24*60*60*1000;
-const hourMs = 60*60*1000;
+      // Pluralización simple (opcional)
+      document.querySelector('#cd-months + .lbl').textContent = (md.months === 1 ? 'mes' : 'meses');
+      document.querySelector('#cd-days + .lbl').textContent   = (days === 1 ? 'día' : 'días');
+      document.querySelector('#cd-hours + .lbl').textContent  = (hours === 1 ? 'hora' : 'horas');
+    }
 
-
-const days = Math.floor(msLeft / dayMs); msLeft -= days * dayMs;
-const hours = Math.floor(msLeft / hourMs);
-
-
-moEl.textContent = String(md.months);
-dEl.textContent = String(days);
-hEl.textContent = String(hours).padStart(2,'0');
-
-
-// Pluralización simple (opcional)
-document.querySelector('#cd-months + .lbl').textContent = (md.months === 1 ? 'mes' : 'meses');
-document.querySelector('#cd-days + .lbl').textContent = (days === 1 ? 'día' : 'días');
-document.querySelector('#cd-hours + .lbl').textContent = (hours === 1 ? 'hora' : 'horas');
-}
-
-
-updateCountdown();
-setInterval(updateCountdown, 1000);
-</script>
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
 </body>
 </html>
 
