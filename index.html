@@ -12,8 +12,7 @@
   <style>
     :root{ 
       --max-width: 840px;
-      --vino:#5a0a16;      /* granate más oscuro */
-      --dorado:#c9a24e;    /* dorado suave */
+      --vino:#5a0a16;      /* granate más oscuro (números/:) */
       --negro:#1a1a1a;     /* etiquetas más oscuras */
     }
     *{box-sizing:border-box}
@@ -29,15 +28,16 @@
     .btn{border:0;border-radius:999px;padding:8px 12px;cursor:pointer;background:#fff;font-weight:600}
     .btn:focus{outline:3px solid #4c9ffe;outline-offset:2px}
 
+    /* Hotspots */
     #hs-music { left:70%; top:13.4%; width:7.1%; height:1%; }
     #hs-cal   { left:13.9%; top:33.4%; width:28%; height:1.1%; }
     #hs-map   { left:53%;   top:38.7%;   width:25%; height:1%; }
     #hs-form  { left:57%;   top:47.7%;   width:25%; height:1.1%; }
 
-    /* === Contador estilizado === */
+    /* === Contador === */
     .cd-wrap{
       position:absolute; left:0; width:100%;
-      top: calc(95% + 32px);  
+      top: calc(95% + 32px);
       text-align:center;
     }
     .countdown{
@@ -45,26 +45,18 @@
       font-variant-numeric:tabular-nums;
     }
     .cd-num{
-      font-family: 'Oswald', sans-serif; 
-      font-size:2.3rem; 
-      font-weight:500; 
-      color:var(--vino);
-      line-height:1;
-      letter-spacing:.02em;
-      min-width: 2ch;
-      text-align:center;
+      font-family: 'Oswald', sans-serif;
+      font-size:2.3rem; font-weight:500; color:var(--vino);
+      line-height:1; letter-spacing:.02em; min-width:2ch; text-align:center;
     }
     .cd-label{
-      display:block; font-size:1.35rem;
-      color:var(--negro); opacity:.95; margin-top:.18rem;
+      display:block; font-size:1.35rem; color:var(--negro); opacity:.95; margin-top:.18rem;
       font-family: 'Dancing Script', cursive;
     }
     .cd-sep{
-      font-size:2.3rem; font-weight:500; line-height:1;
-      color:var(--vino);
-      font-family: 'Oswald', sans-serif;
-      transform: translateY(2px);
-      min-width: 1ch; text-align:center;
+      font-size:2.3rem; font-weight:500; line-height:1; color:var(--vino);
+      font-family: 'Oswald', sans-serif; transform: translateY(2px);
+      min-width:1ch; text-align:center;
     }
     @media (max-width: 420px){
       .countdown{gap:.8rem}
@@ -73,40 +65,23 @@
       .cd-label{font-size:1.2rem}
     }
 
-    /* === Pistas animadas === */
+    /* === Pista animada: SOLO mano (diagonal, tono oscuro) === */
     .hint{
       position:absolute; z-index:5; pointer-events:none;
-      display:flex; align-items:center; gap:.35rem;
-      user-select:none; opacity:.95; transition:opacity .35s ease;
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-    }
-    .hint .pulse{
-      width:14px; height:14px; border-radius:999px; background: var(--vino);
-      box-shadow: 0 0 0 0 rgba(90,10,22,.7);
-      animation: pulse 1.8s infinite;
-    }
-    .hint .hand{ font-size:1.25rem; line-height:1; animation: bounce 1.2s infinite; color:#fff; }
-    .hint .txt{
-      padding:.25rem .5rem; border-radius:999px; background:rgba(255,255,255,.9);
-      font-weight:600; font-size:.85rem; color:var(--negro); letter-spacing:.01em;
-      box-shadow:0 6px 16px rgba(0,0,0,.12);
+      user-select:none; transition:opacity .35s ease; opacity:.95;
+      font-size:1.6rem; line-height:1; color:#bfbfbf; /* mano más oscura, no amarilla */
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,.35));
+      transform-origin: center;
+      animation: hint-bounce 1.2s infinite;
     }
     .hint.hidden{ opacity:0; }
 
-    .hint-music{ top: 12.8%; left: 78.5%; transform: translate(-50%,-50%); }
-    .hint-map  { top: 38.2%; left: 49.5%; transform: translate(-50%,-50%); }
-
-    @keyframes pulse{
-      0%  { box-shadow: 0 0 0 0 rgba(90,10,22,.6); transform: scale(1); }
-      70% { box-shadow: 0 0 0 14px rgba(90,10,22,0); transform: scale(1.08); }
-      100%{ box-shadow: 0 0 0 0 rgba(90,10,22,0); transform: scale(1); }
-    }
-    @keyframes bounce{
-      0%,100%{ transform: translateY(0); }
-      50%    { transform: translateY(-4px); }
+    @keyframes hint-bounce{
+      0%,100%{ transform: rotate(-35deg) translateY(0); }
+      50%    { transform: rotate(-35deg) translateY(-4px); }
     }
     @media (prefers-reduced-motion: reduce){
-      .hint .pulse, .hint .hand{ animation: none; }
+      .hint{ animation:none }
     }
   </style>
 </head>
@@ -149,17 +124,8 @@
       </div>
     </div>
 
-    <!-- Pistas animadas -->
-    <div class="hint hint-music" id="hint-music" aria-hidden="true">
-      <span class="pulse"></span>
-      <span class="hand">👉</span>
-      <span class="txt">Toca para música</span>
-    </div>
-    <div class="hint hint-map" id="hint-map" aria-hidden="true">
-      <span class="pulse"></span>
-      <span class="hand">👉</span>
-      <span class="txt">Ver mapa</span>
-    </div>
+    <!-- Mano animada SOLO para el play -->
+    <div class="hint" id="hint-music" aria-hidden="true">👉</div>
   </main>
 
   <script>
@@ -189,7 +155,7 @@
       });
     }
 
-    // === Lógica contador ===
+    // === Lógica contador (días y horas con cero a la izquierda) ===
     (function(){
       const target = new Date('2025-11-29T17:00:00+01:00');
       const elM = document.getElementById('cd-months');
@@ -242,25 +208,50 @@
       }
     })();
 
-    // === Ocultar pistas animadas tras interacción ===
+    // === Posiciona la mano para que apunte al centro del hotspot de música ===
     (function(){
-      const hintMusic = document.getElementById('hint-music');
-      const hintMap   = document.getElementById('hint-map');
-      const hsMusicA  = document.querySelector('#hs-music a');
-      const hsMapA    = document.querySelector('#hs-map a');
+      const hint = document.getElementById('hint-music');
+      const stage = document.querySelector('.stage');
+      const hs    = document.getElementById('hs-music');
 
-      function hideMusicHint(){ if(hintMusic) hintMusic.classList.add('hidden'); }
-      function hideMapHint(){ if(hintMap) hintMap.classList.add('hidden'); }
+      function placeHand(){
+        if(!hint || !hs || !stage) return;
+        const stageRect = stage.getBoundingClientRect();
+        const hsRect    = hs.getBoundingClientRect();
 
-      if (media){ media.addEventListener('play', hideMusicHint, {once:true}); }
-      if (hsMusicA){
-        hsMusicA.addEventListener('click', hideMusicHint, {once:true});
-        hsMusicA.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' '){ hideMusicHint(); }});
+        // Centro del hotspot
+        const cx = hsRect.left + hsRect.width/2;
+        const cy = hsRect.top  + hsRect.height/2;
+
+        // Colocar la mano arriba a la izquierda del centro (apuntando en diagonal hacia abajo-derecha)
+        const dx = -28;   // desplaza 28px a la izquierda del centro
+        const dy = -18;   // desplaza 18px arriba del centro
+
+        // Convertimos a coordenadas relativas del contenedor .stage
+        const left = cx + dx - stageRect.left;
+        const top  = cy + dy - stageRect.top;
+
+        hint.style.left = `${left}px`;
+        hint.style.top  = `${top}px`;
+        // Asegura el ángulo diagonal
+        hint.style.transform = 'rotate(-35deg)';
       }
-      if (hsMapA){
-        hsMapA.addEventListener('click', hideMapHint, {once:true});
-        hsMapA.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' '){ hideMapHint(); }});
+
+      // Colocar al cargar recursos (incluida la imagen), al redimensionar y si cambia el scroll
+      window.addEventListener('load', placeHand);
+      window.addEventListener('resize', placeHand);
+      // Por si las fuentes o el layout ajustan después:
+      setTimeout(placeHand, 300);
+      setTimeout(placeHand, 1000);
+
+      // Ocultar la mano tras reproducir o click
+      function hide(){ hint && hint.classList.add('hidden'); }
+      const link = document.querySelector('#hs-music a');
+      if (link){
+        link.addEventListener('click', hide, {once:true});
+        link.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' ') hide(); }, {once:true});
       }
+      if (media){ media.addEventListener('play', hide, {once:true}); }
     })();
   </script>
 </body>
