@@ -34,40 +34,44 @@
     #hs-map   { left:53%;   top:38.7%;   width:25%; height:1%; }
     #hs-form  { left:57%;   top:47.7%;   width:25%; height:1.1%; }
 
-    /* === Contador estilizado === */
+    /* === Contador estilizado (más bajo, más separación) === */
     .cd-wrap{
       position:absolute; left:0; width:100%;
-      top: calc(95% + 24px);  /* más abajo del diseño */
+      top: calc(95% + 48px);  /* bajado 3 “espacios” más */
       text-align:center;
     }
     .countdown{
-      display:flex; justify-content:center; align-items:baseline; gap:.55rem;
+      display:flex; justify-content:center; align-items:baseline; gap:1rem; /* más separación */
       font-variant-numeric:tabular-nums;
     }
     .cd-num{
       font-family: 'Oswald', sans-serif; /* números alargados */
-      font-size:2.3rem; /* +2 puntos respecto a antes */
+      font-size:2.3rem; 
       font-weight:500; 
       color:var(--vino);
       line-height:1;
       letter-spacing:.02em;
+      min-width: 2ch;       /* asegura ancho para 0X */
+      text-align: center;
     }
     .cd-label{
-      display:block; font-size:1rem; color:var(--negro); opacity:.9; margin-top:.18rem;
+      display:block; font-size:1.25rem;  /* +3pt aprox. */
+      color:var(--negro); opacity:.9; margin-top:.18rem;
       font-family: 'Dancing Script', cursive; /* manuscrita */
     }
     .cd-sep{
       font-size:2.3rem; font-weight:500; line-height:1;
-      color:var(--vino);
+      color:var(--vino);                /* mismo color que los números */
       font-family: 'Oswald', sans-serif;
       transform: translateY(2px);
+      min-width: 1ch; text-align:center;
     }
 
     @media (max-width: 420px){
-      .countdown{gap:.45rem}
+      .countdown{gap:.8rem}
       .cd-num{font-size:2rem}
       .cd-sep{font-size:2rem}
-      .cd-label{font-size:.9rem}
+      .cd-label{font-size:1.1rem}
     }
   </style>
 </head>
@@ -94,17 +98,17 @@
     <div class="cd-wrap" aria-live="polite">
       <div class="countdown" id="countdown">
         <div>
-          <span class="cd-num" id="cd-months">0</span>
+          <span class="cd-num" id="cd-months">00</span>
           <span class="cd-label">Meses</span>
         </div>
         <span class="cd-sep" aria-hidden="true">:</span>
         <div>
-          <span class="cd-num" id="cd-days">0</span>
+          <span class="cd-num" id="cd-days">00</span>
           <span class="cd-label">Días</span>
         </div>
         <span class="cd-sep" aria-hidden="true">:</span>
         <div>
-          <span class="cd-num" id="cd-hours">0</span>
+          <span class="cd-num" id="cd-hours">00</span>
           <span class="cd-label">Horas</span>
         </div>
       </div>
@@ -138,7 +142,7 @@
       });
     }
 
-    // === Lógica contador ===
+    // === Lógica contador (días y horas con cero a la izquierda) ===
     (function(){
       const target = new Date('2025-11-29T17:00:00+01:00');
       const elM = document.getElementById('cd-months');
@@ -172,14 +176,14 @@
         const now = new Date();
         const {months, days, hours, done} = diffParts(now, target);
         if (done){
-          elM.textContent = '0';
-          elD.textContent = '0';
-          elH.textContent = '0';
+          elM.textContent = '00';
+          elD.textContent = '00';
+          elH.textContent = '00';
           return true;
         } else {
-          elM.textContent = String(months);
-          elD.textContent = String(days);
-          elH.textContent = String(hours);
+          elM.textContent = String(months).padStart(2,'0');  // opcional con cero a la izquierda
+          elD.textContent = String(days).padStart(2,'0');    // solicitado
+          elH.textContent = String(hours).padStart(2,'0');   // solicitado
           return false;
         }
       }
