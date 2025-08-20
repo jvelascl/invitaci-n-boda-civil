@@ -8,59 +8,82 @@
   <style>
     :root{ 
       --max-width: 840px;
-
-      /* Colores del contador, ajustados al estilo crema/marrón de la invitación */
-      --cd-bg: #f3e8d2;   /* fondo crema */
-      --cd-txt: #6b4e2e;  /* números */
-      --cd-muted: #8a6a44;/* etiquetas */
+      --vino:#7b0d1e;      /* granate */
+      --dorado:#c9a24e;    /* dorado suave */
+      --negro:#2b2b2b;     /* negro cálido */
+      --marco: rgba(201,162,78,.35);
     }
     *{box-sizing:border-box}
     html,body{margin:0;background:#0b0b0b;color:#111;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
 
-    /* Lienzo vertical responsive (recuadro largo) */
+    /* Lienzo vertical responsive */
     .stage{position:relative;width:min(100vw,var(--max-width));margin:16px auto;border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.35);background:#000}
     .bg{display:block;width:100%;height:auto}
 
-    /* Capa de hotspots encima del arte */
+    /* Hotspots encima del arte */
     .hotspot{position:absolute;display:inline-block}
     .hotspot a{display:block;width:100%;height:100%;text-indent:-9999px;overflow:hidden}
 
-    /* Controles opcionales (por si quieres mantener botones visibles además del hotspot de música) */
+    /* Controles de música */
     .controls{position:absolute;left:50%;top:10%;transform:translateX(-50%);display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.92);border-radius:999px;padding:10px 14px;box-shadow:0 8px 24px rgba(0,0,0,.25);display:none}
     .btn{border:0;border-radius:999px;padding:8px 12px;cursor:pointer;background:#fff;font-weight:600}
     .btn:focus{outline:3px solid #4c9ffe;outline-offset:2px}
 
-    /* === Hotspots calculados a partir de Boda.jpg (288x2048) === */
-    /* Música (icono ▶) */
+    /* Hotspots de interacción */
     #hs-music { left:70%; top:13.4%; width:7.1%; height:1%; }
-    /* Agenda la fecha */
     #hs-cal   { left:13.9%; top:33.4%; width:28%; height:1.1%; }
-    /* Ver mapa */
     #hs-map   { left:53%;   top:38.7%;   width:25%; height:1%; }
-    /* Confirmar asistencia */
-    #hs-form  { left:57%;   top:47.7%; width:25%; height:1.1%; }
+    #hs-form  { left:57%;   top:47.7%;   width:25%; height:1.1%; }
 
-    /* === Cuenta regresiva (meses, días, horas) === */
-    #countdown{position:absolute; left:30%; top:95.2%; width:40%; text-align:center;}
-    #countdown .cd-wrap{display:flex; justify-content:space-between; align-items:center; gap:8px; background:var(--cd-bg); padding:8px 10px; border-radius:14px; box-shadow:0 6px 16px rgba(0,0,0,.12)}
-    #countdown .box{flex:1; border-radius:10px; padding:6px 4px}
-    #countdown .num{display:block; font-weight:800; color:var(--cd-txt); font-size:clamp(16px, 4.2vw, 26px); line-height:1}
-    #countdown .lbl{display:block; color:var(--cd-muted); font-weight:600; font-size:clamp(11px, 3.0vw, 13px); letter-spacing:.02em}
+    /* === Nuevo Contador === */
+    .cd-wrap{
+      position:absolute; left:20%; top:95%; width:60%;
+      display:flex; flex-direction:column; align-items:center; gap:.6rem;
+      margin:.75rem auto 0;
+    }
+    .countdown{
+      display:flex; gap:.5rem; width:100%; justify-content:center; align-items:stretch;
+    }
+    .cd-box{
+      flex:1; min-width:80px; text-align:center; padding:.75rem .5rem;
+      border:1px solid var(--marco); border-radius:16px; background:#fff;
+      box-shadow:0 4px 14px rgba(0,0,0,.04);
+    }
+    .cd-num{
+      display:block; font-size:2rem; line-height:1; font-weight:700; color:var(--vino);
+      font-variant-numeric:tabular-nums;
+    }
+    .cd-label{
+      display:block; margin-top:.25rem; letter-spacing:.04em; text-transform:uppercase;
+      font-size:.72rem; color:var(--negro); opacity:.8;
+    }
+    .cd-note{
+      font-size:.85rem; color:var(--negro); opacity:.7; text-align:center;
+    }
+    .cd-sep{
+      align-self:stretch; width:1px; background:linear-gradient(to bottom, transparent, var(--marco), transparent);
+    }
+    @media (max-width: 420px){
+      .countdown{gap:.35rem}
+      .cd-box{min-width:0; padding:.65rem .4rem}
+      .cd-num{font-size:1.7rem}
+    }
+    .cd-done{
+      border-color:var(--dorado);
+      box-shadow:0 6px 20px rgba(201,162,78,.25);
+    }
   </style>
 </head>
 <body>
   <main class="stage" aria-label="Invitación interactiva">
-    <!-- Fondo: usa el JPG exacto que compartiste -->
+    <!-- Fondo -->
     <img class="bg" src="assets/Boda.jpg" alt="Invitación David y Selena" id="bg"/>
 
-    <!-- Vídeo MP4 (solo para audio). Lo mantenemos oculto visualmente pero presente en el DOM. -->
-    <!-- playsinline evita pantalla completa en móvil; sin controles nativos para que no tape nada. -->
+    <!-- Música -->
     <video id="media" preload="metadata" playsinline style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" aria-hidden="true">
       <source src="assets/musica.mp4" type="video/mp4"/>
       Tu navegador no soporta vídeo HTML5.
     </video>
-
-    <!-- Controles opcionales visibles (puedes activar display:flex en .controls si los quieres además del hotspot) -->
     <div class="controls" id="controls">
       <button class="btn" id="play">▶︎ Reproducir</button>
       <button class="btn" id="mute">🔊</button>
@@ -72,13 +95,25 @@
     <div id="hs-map" class="hotspot"><a href="https://maps.app.goo.gl/P5i7W7WSzFhvjFDs9" target="_blank" rel="noopener">Ver mapa</a></div>
     <div id="hs-form" class="hotspot"><a href="https://docs.google.com/forms/d/e/1FAIpQLSdmN66lbqBq6saBTdLBhs7DRX55u6N_YkGAtVkXV1Ysww89ZQ/viewform?usp=header" target="_blank" rel="noopener">Confirmar asistencia</a></div>
 
-    <!-- Cuenta regresiva -->
-    <div id="countdown" aria-label="Cuenta regresiva">
-      <div class="cd-wrap">
-        <div class="box"><span id="cd-months" class="num">0</span><span class="lbl">meses</span></div>
-        <div class="box"><span id="cd-days" class="num">0</span><span class="lbl">días</span></div>
-        <div class="box"><span id="cd-hours" class="num">0</span><span class="lbl">horas</span></div>
+    <!-- === Nuevo Contador === -->
+    <div class="cd-wrap" aria-live="polite">
+      <div class="countdown" id="countdown">
+        <div class="cd-box" aria-label="Meses restantes">
+          <span class="cd-num" id="cd-months">0</span>
+          <span class="cd-label">Meses</span>
+        </div>
+        <div class="cd-sep"></div>
+        <div class="cd-box" aria-label="Días restantes">
+          <span class="cd-num" id="cd-days">0</span>
+          <span class="cd-label">Días</span>
+        </div>
+        <div class="cd-sep"></div>
+        <div class="cd-box" aria-label="Horas restantes">
+          <span class="cd-num" id="cd-hours">0</span>
+          <span class="cd-label">Horas</span>
+        </div>
       </div>
+      <div class="cd-note" id="cd-note">Hasta el 29 de noviembre · 17:00 h</div>
     </div>
   </main>
 
@@ -88,118 +123,83 @@
     const muteBtn = document.getElementById('mute');
 
     function ensureUnmutedOnFirstPlay(){
-      // Algunos móviles solo permiten reproducir con sonido tras interacción.
-      // Este toggle se llama desde el click del usuario, así que podemos quitar mute si hiciera falta.
       if (media.muted) media.muted = false;
     }
-
     function toggleMusic(){
       ensureUnmutedOnFirstPlay();
       if(media.paused){ media.play().catch(e=>console.warn('No se pudo reproducir:', e)); }
       else{ media.pause(); }
     }
-
-    // Si decides mostrar los botones visibles (cambia display:none a display:flex en .controls):
     if(playBtn && muteBtn){
-      playBtn?.addEventListener('click', async () => {
+      playBtn.addEventListener('click', async () => {
         try{
           ensureUnmutedOnFirstPlay();
           if (media.paused){ await media.play(); playBtn.textContent='⏸︎ Pausar'; }
           else{ media.pause(); playBtn.textContent='▶︎ Reproducir'; }
         }catch(e){ console.warn('No se pudo reproducir:', e); }
       });
-      muteBtn?.addEventListener('click', () => {
+      muteBtn.addEventListener('click', () => {
         media.muted = !media.muted;
         muteBtn.textContent = media.muted ? '🔇' : '🔊';
       });
     }
 
- // ====== Cuenta regresiva (meses, días y horas) ======
-    // Fecha/hora del evento en Madrid (CET/CEST). Ajusta si cambia.
-    const TARGET = new Date('2025-11-29T17:00:00+01:00');
+    // === Lógica nuevo contador ===
+    (function(){
+      const target = new Date('2025-11-29T17:00:00+01:00');
+      const elM = document.getElementById('cd-months');
+      const elD = document.getElementById('cd-days');
+      const elH = document.getElementById('cd-hours');
+      const wrap = document.getElementById('countdown');
+      const note = document.getElementById('cd-note');
 
-    const moEl = document.getElementById('cd-months');
-    const dEl  = document.getElementById('cd-days');
-    const hEl  = document.getElementById('cd-hours');
-
-    function monthsDiff(from, to){
-      let months = (to.getFullYear() - from.getFullYear()) * 12 + (to.getMonth() - from.getMonth());
-      // ancla: from + months
-      let anchor = new Date(from.getFullYear(), from.getMonth() + months, from.getDate(), from.getHours(), from.getMinutes(), from.getSeconds());
-      // si nos pasamos del target, retrocede un mes
-      while (anchor > to) {
-        months--;
-        anchor = new Date(from.getFullYear(), from.getMonth() + months, from.getDate(), from.getHours(), from.getMinutes(), from.getSeconds());
+      function addMonths(date, months){
+        const d = new Date(date);
+        const day = d.getDate();
+        d.setDate(1);
+        d.setMonth(d.getMonth() + months);
+        const lastDay = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
+        d.setDate(Math.min(day, lastDay));
+        return d;
       }
-      return { months, anchor };
-    }
-
-    function updateCountdown(){
-      const now = new Date();
-      if (TARGET <= now){
-        moEl.textContent = '0';
-        dEl.textContent  = '0';
-        hEl.textContent  = '0';
-        return;
+      function diffParts(now, tgt){
+        if (now >= tgt) return {months:0, days:0, hours:0, done:true};
+        let months = (tgt.getFullYear() - now.getFullYear()) * 12 + (tgt.getMonth() - now.getMonth());
+        const candidate = addMonths(now, months);
+        if (candidate > tgt) { months -= 1; }
+        const afterMonths = addMonths(now, months);
+        let ms = tgt - afterMonths;
+        const dayMs = 24*60*60*1000;
+        const hourMs = 60*60*1000;
+        const days = Math.floor(ms / dayMs);
+        ms -= days * dayMs;
+        const hours = Math.floor(ms / hourMs);
+        return {months, days, hours, done:false};
       }
-      const md = monthsDiff(now, TARGET);
-      const afterMonths = md.anchor;
-      let msLeft = TARGET - afterMonths;
-      const dayMs = 24*60*60*1000;
-      const hourMs = 60*60*1000;
-
-      const days = Math.floor(msLeft / dayMs); msLeft -= days * dayMs;
-      const hours = Math.floor(msLeft / hourMs);
-
-      moEl.textContent = String(md.months);
-      dEl.textContent  = String(days);
-      hEl.textContent  = String(hours).padStart(2,'0');
-
-      // Pluralización simple (opcional)
-      document.querySelector('#cd-months + .lbl').textContent = (md.months === 1 ? 'mes' : 'meses');
-      document.querySelector('#cd-days + .lbl').textContent   = (days === 1 ? 'día' : 'días');
-      document.querySelector('#cd-hours + .lbl').textContent  = (hours === 1 ? 'hora' : 'horas');
-    }
-
-    /* FORZAR estilo del contador sin caja */
-#countdown, #countdown * {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-#countdown { 
-  position: absolute; left:30%; top: calc(95.2% + 3px); width:40%;
-  text-align:center; pointer-events:none; z-index:5;
-}
-#countdown .cd-wrap{
-  display:flex; align-items:flex-end; gap:0; padding:0;
-}
-#countdown .box{ flex:0 0 auto; text-align:center; padding:0; }
-#countdown .num{
-  display:block; font-weight:800; color:#000;
-  font-variant-numeric: tabular-nums;
-  font-size: clamp(38px, 9.5vw, 62px);
-  line-height:1;
-  transform: scaleY(1.25);        /* alargado vertical */
-  transform-origin: center bottom;
-}
-#countdown .lbl{
-  display:block; color:#000; font-weight:700;
-  font-size: clamp(14px, 3.4vw, 18px);
-  letter-spacing:.06em; text-transform:none; margin-top:6px;
-}
-#countdown .box + .box::before{
-  content: ":"; display:inline-block; margin:0 10px; font-weight:800; color:#000;
-  font-size: clamp(36px, 9vw, 60px);
-  line-height:1;
-  transform: translateY(-4px) scaleY(1.25);
-  transform-origin: center bottom;
-  pointer-events:none;
-}
-
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
+      function render(){
+        const now = new Date();
+        const {months, days, hours, done} = diffParts(now, target);
+        if (done){
+          elM.textContent = '0';
+          elD.textContent = '0';
+          elH.textContent = '0';
+          wrap.classList.add('cd-done');
+          note.textContent = '¡Llegó el gran día!';
+          return true;
+        } else {
+          elM.textContent = String(months);
+          elD.textContent = String(days);
+          elH.textContent = String(hours);
+          return false;
+        }
+      }
+      let finished = render();
+      if (!finished){
+        const timer = setInterval(()=>{
+          if (render()){ clearInterval(timer); }
+        }, 60000); // actualiza cada minuto
+      }
+    })();
   </script>
 </body>
 </html>
-
