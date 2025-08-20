@@ -11,75 +11,50 @@
       --vino:#7b0d1e;      /* granate */
       --dorado:#c9a24e;    /* dorado suave */
       --negro:#2b2b2b;     /* negro cálido */
-      --marco: rgba(201,162,78,.35);
     }
     *{box-sizing:border-box}
     html,body{margin:0;background:#0b0b0b;color:#111;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
 
-    /* Lienzo vertical responsive */
     .stage{position:relative;width:min(100vw,var(--max-width));margin:16px auto;border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.35);background:#000}
     .bg{display:block;width:100%;height:auto}
 
-    /* Hotspots encima del arte */
     .hotspot{position:absolute;display:inline-block}
     .hotspot a{display:block;width:100%;height:100%;text-indent:-9999px;overflow:hidden}
 
-    /* Controles de música */
     .controls{position:absolute;left:50%;top:10%;transform:translateX(-50%);display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.92);border-radius:999px;padding:10px 14px;box-shadow:0 8px 24px rgba(0,0,0,.25);display:none}
     .btn{border:0;border-radius:999px;padding:8px 12px;cursor:pointer;background:#fff;font-weight:600}
     .btn:focus{outline:3px solid #4c9ffe;outline-offset:2px}
 
-    /* Hotspots de interacción */
     #hs-music { left:70%; top:13.4%; width:7.1%; height:1%; }
     #hs-cal   { left:13.9%; top:33.4%; width:28%; height:1.1%; }
     #hs-map   { left:53%;   top:38.7%;   width:25%; height:1%; }
     #hs-form  { left:57%;   top:47.7%;   width:25%; height:1.1%; }
 
-    /* === Nuevo Contador === */
+    /* === Contador minimalista === */
     .cd-wrap{
       position:absolute; left:20%; top:95%; width:60%;
-      display:flex; flex-direction:column; align-items:center; gap:.6rem;
-      margin:.75rem auto 0;
+      text-align:center;
     }
     .countdown{
-      display:flex; gap:.5rem; width:100%; justify-content:center; align-items:stretch;
-    }
-    .cd-box{
-      flex:1; min-width:80px; text-align:center; padding:.75rem .5rem;
-      border:1px solid var(--marco); border-radius:16px; background:#fff;
-      box-shadow:0 4px 14px rgba(0,0,0,.04);
-    }
-    .cd-num{
-      display:block; font-size:2rem; line-height:1; font-weight:700; color:var(--vino);
+      display:flex; justify-content:center; align-items:flex-end; gap:.5rem;
       font-variant-numeric:tabular-nums;
     }
-    .cd-label{
-      display:block; margin-top:.25rem; letter-spacing:.04em; text-transform:uppercase;
-      font-size:.72rem; color:var(--negro); opacity:.8;
+    .cd-num{
+      font-size:2rem; font-weight:700; color:var(--vino);
     }
-    .cd-note{
-      font-size:.85rem; color:var(--negro); opacity:.7; text-align:center;
+    .cd-label{
+      display:block; font-size:.72rem; color:var(--negro); opacity:.8;
+      margin-top:.2rem;
     }
     .cd-sep{
-      align-self:stretch; width:1px; background:linear-gradient(to bottom, transparent, var(--marco), transparent);
-    }
-    @media (max-width: 420px){
-      .countdown{gap:.35rem}
-      .cd-box{min-width:0; padding:.65rem .4rem}
-      .cd-num{font-size:1.7rem}
-    }
-    .cd-done{
-      border-color:var(--dorado);
-      box-shadow:0 6px 20px rgba(201,162,78,.25);
+      font-size:2rem; font-weight:700; color:var(--dorado);
     }
   </style>
 </head>
 <body>
   <main class="stage" aria-label="Invitación interactiva">
-    <!-- Fondo -->
     <img class="bg" src="assets/Boda.jpg" alt="Invitación David y Selena" id="bg"/>
 
-    <!-- Música -->
     <video id="media" preload="metadata" playsinline style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" aria-hidden="true">
       <source src="assets/musica.mp4" type="video/mp4"/>
       Tu navegador no soporta vídeo HTML5.
@@ -95,25 +70,24 @@
     <div id="hs-map" class="hotspot"><a href="https://maps.app.goo.gl/P5i7W7WSzFhvjFDs9" target="_blank" rel="noopener">Ver mapa</a></div>
     <div id="hs-form" class="hotspot"><a href="https://docs.google.com/forms/d/e/1FAIpQLSdmN66lbqBq6saBTdLBhs7DRX55u6N_YkGAtVkXV1Ysww89ZQ/viewform?usp=header" target="_blank" rel="noopener">Confirmar asistencia</a></div>
 
-    <!-- === Nuevo Contador === -->
+    <!-- Contador -->
     <div class="cd-wrap" aria-live="polite">
       <div class="countdown" id="countdown">
-        <div class="cd-box" aria-label="Meses restantes">
+        <div>
           <span class="cd-num" id="cd-months">0</span>
           <span class="cd-label">Meses</span>
         </div>
-        <div class="cd-sep"></div>
-        <div class="cd-box" aria-label="Días restantes">
+        <span class="cd-sep">:</span>
+        <div>
           <span class="cd-num" id="cd-days">0</span>
           <span class="cd-label">Días</span>
         </div>
-        <div class="cd-sep"></div>
-        <div class="cd-box" aria-label="Horas restantes">
+        <span class="cd-sep">:</span>
+        <div>
           <span class="cd-num" id="cd-hours">0</span>
           <span class="cd-label">Horas</span>
         </div>
       </div>
-      <div class="cd-note" id="cd-note">Hasta el 29 de noviembre · 17:00 h</div>
     </div>
   </main>
 
@@ -144,14 +118,12 @@
       });
     }
 
-    // === Lógica nuevo contador ===
+    // === Lógica contador ===
     (function(){
       const target = new Date('2025-11-29T17:00:00+01:00');
       const elM = document.getElementById('cd-months');
       const elD = document.getElementById('cd-days');
       const elH = document.getElementById('cd-hours');
-      const wrap = document.getElementById('countdown');
-      const note = document.getElementById('cd-note');
 
       function addMonths(date, months){
         const d = new Date(date);
@@ -183,8 +155,6 @@
           elM.textContent = '0';
           elD.textContent = '0';
           elH.textContent = '0';
-          wrap.classList.add('cd-done');
-          note.textContent = '¡Llegó el gran día!';
           return true;
         } else {
           elM.textContent = String(months);
@@ -197,7 +167,7 @@
       if (!finished){
         const timer = setInterval(()=>{
           if (render()){ clearInterval(timer); }
-        }, 60000); // actualiza cada minuto
+        }, 60000);
       }
     })();
   </script>
