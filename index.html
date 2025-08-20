@@ -12,8 +12,9 @@
   <style>
     :root{ 
       --max-width: 840px;
-      --vino:#5a0a16;      /* granate más oscuro (números/:) */
-      --negro:#1a1a1a;     /* etiquetas más oscuras */
+      --vino:#5a0a16;      /* granate oscuro */
+      --dorado:#c9a24e;    /* dorado suave */
+      --negro:#1a1a1a;
     }
     *{box-sizing:border-box}
     html,body{margin:0;background:#0b0b0b;color:#111;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
@@ -23,10 +24,6 @@
 
     .hotspot{position:absolute;display:inline-block}
     .hotspot a{display:block;width:100%;height:100%;text-indent:-9999px;overflow:hidden}
-
-    .controls{position:absolute;left:50%;top:10%;transform:translateX(-50%);display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.92);border-radius:999px;padding:10px 14px;box-shadow:0 8px 24px rgba(0,0,0,.25);display:none}
-    .btn{border:0;border-radius:999px;padding:8px 12px;cursor:pointer;background:#fff;font-weight:600}
-    .btn:focus{outline:3px solid #4c9ffe;outline-offset:2px}
 
     /* Hotspots */
     #hs-music { left:70%; top:13.4%; width:7.1%; height:1%; }
@@ -58,18 +55,12 @@
       font-family: 'Oswald', sans-serif; transform: translateY(2px);
       min-width:1ch; text-align:center;
     }
-    @media (max-width: 420px){
-      .countdown{gap:.8rem}
-      .cd-num{font-size:2rem}
-      .cd-sep{font-size:2rem}
-      .cd-label{font-size:1.2rem}
-    }
 
-    /* === Pista animada: SOLO mano (diagonal, tono oscuro) === */
+    /* === Mano animada === */
     .hint{
       position:absolute; z-index:5; pointer-events:none;
       user-select:none; transition:opacity .35s ease; opacity:.95;
-      font-size:1.6rem; line-height:1; color:#bfbfbf; /* mano más oscura, no amarilla */
+      font-size:1.8rem; line-height:1; color:var(--dorado); /* dorado que combina */
       filter: drop-shadow(0 2px 4px rgba(0,0,0,.35));
       transform-origin: center;
       animation: hint-bounce 1.2s infinite;
@@ -91,71 +82,38 @@
 
     <video id="media" preload="metadata" playsinline style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" aria-hidden="true">
       <source src="assets/musica.mp4" type="video/mp4"/>
-      Tu navegador no soporta vídeo HTML5.
     </video>
-    <div class="controls" id="controls">
-      <button class="btn" id="play">▶︎ Reproducir</button>
-      <button class="btn" id="mute">🔊</button>
-    </div>
 
     <!-- Hotspots -->
-    <div id="hs-music" class="hotspot"><a href="#" onclick="toggleMusic(); return false;" aria-label="Reproducir/Pausar música">Reproducir música</a></div>
-    <div id="hs-cal" class="hotspot"><a href="https://calendar.app.google/L6ciMkGSfXdSb6ju7" target="_blank" rel="noopener">Agenda la fecha</a></div>
-    <div id="hs-map" class="hotspot"><a href="https://maps.app.goo.gl/P5i7W7WSzFhvjFDs9" target="_blank" rel="noopener">Ver mapa</a></div>
-    <div id="hs-form" class="hotspot"><a href="https://docs.google.com/forms/d/e/1FAIpQLSdmN66lbqBq6saBTdLBhs7DRX55u6N_YkGAtVkXV1Ysww89ZQ/viewform?usp=header" target="_blank" rel="noopener">Confirmar asistencia</a></div>
+    <div id="hs-music" class="hotspot"><a href="#" onclick="toggleMusic(); return false;" aria-label="Reproducir música">Reproducir música</a></div>
+    <div id="hs-cal" class="hotspot"><a href="https://calendar.app.google/L6ciMkGSfXdSb6ju7" target="_blank">Agenda la fecha</a></div>
+    <div id="hs-map" class="hotspot"><a href="https://maps.app.goo.gl/P5i7W7WSzFhvjFDs9" target="_blank">Ver mapa</a></div>
+    <div id="hs-form" class="hotspot"><a href="https://docs.google.com/forms/d/e/1FAIpQLSdmN66lbqBq6saBTdLBhs7DRX55u6N_YkGAtVkXV1Ysww89ZQ/viewform" target="_blank">Confirmar asistencia</a></div>
 
     <!-- Contador -->
     <div class="cd-wrap" aria-live="polite">
       <div class="countdown" id="countdown">
-        <div>
-          <span class="cd-num" id="cd-months">00</span>
-          <span class="cd-label">Meses</span>
-        </div>
-        <span class="cd-sep" aria-hidden="true">:</span>
-        <div>
-          <span class="cd-num" id="cd-days">00</span>
-          <span class="cd-label">Días</span>
-        </div>
-        <span class="cd-sep" aria-hidden="true">:</span>
-        <div>
-          <span class="cd-num" id="cd-hours">00</span>
-          <span class="cd-label">Horas</span>
-        </div>
+        <div><span class="cd-num" id="cd-months">00</span><span class="cd-label">Meses</span></div>
+        <span class="cd-sep">:</span>
+        <div><span class="cd-num" id="cd-days">00</span><span class="cd-label">Días</span></div>
+        <span class="cd-sep">:</span>
+        <div><span class="cd-num" id="cd-hours">00</span><span class="cd-label">Horas</span></div>
       </div>
     </div>
 
-    <!-- Mano animada SOLO para el play -->
+    <!-- Mano -->
     <div class="hint" id="hint-music" aria-hidden="true">👉</div>
   </main>
 
   <script>
     const media = document.getElementById('media');
-    const playBtn = document.getElementById('play');
-    const muteBtn = document.getElementById('mute');
 
-    function ensureUnmutedOnFirstPlay(){
-      if (media.muted) media.muted = false;
-    }
     function toggleMusic(){
-      ensureUnmutedOnFirstPlay();
-      if(media.paused){ media.play().catch(e=>console.warn('No se pudo reproducir:', e)); }
+      if(media.paused){ media.play().catch(()=>{}); }
       else{ media.pause(); }
     }
-    if(playBtn && muteBtn){
-      playBtn.addEventListener('click', async () => {
-        try{
-          ensureUnmutedOnFirstPlay();
-          if (media.paused){ await media.play(); playBtn.textContent='⏸︎ Pausar'; }
-          else{ media.pause(); playBtn.textContent='▶︎ Reproducir'; }
-        }catch(e){ console.warn('No se pudo reproducir:', e); }
-      });
-      muteBtn.addEventListener('click', () => {
-        media.muted = !media.muted;
-        muteBtn.textContent = media.muted ? '🔇' : '🔊';
-      });
-    }
 
-    // === Lógica contador (días y horas con cero a la izquierda) ===
+    // === Contador ===
     (function(){
       const target = new Date('2025-11-29T17:00:00+01:00');
       const elM = document.getElementById('cd-months');
@@ -164,51 +122,31 @@
 
       function addMonths(date, months){
         const d = new Date(date);
-        const day = d.getDate();
-        d.setDate(1);
-        d.setMonth(d.getMonth() + months);
-        const lastDay = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
-        d.setDate(Math.min(day, lastDay));
+        d.setMonth(d.getMonth()+months);
         return d;
       }
       function diffParts(now, tgt){
         if (now >= tgt) return {months:0, days:0, hours:0, done:true};
-        let months = (tgt.getFullYear() - now.getFullYear()) * 12 + (tgt.getMonth() - now.getMonth());
-        const candidate = addMonths(now, months);
-        if (candidate > tgt) { months -= 1; }
-        const afterMonths = addMonths(now, months);
-        let ms = tgt - afterMonths;
-        const dayMs = 24*60*60*1000;
-        const hourMs = 60*60*1000;
-        const days = Math.floor(ms / dayMs);
-        ms -= days * dayMs;
-        const hours = Math.floor(ms / hourMs);
-        return {months, days, hours, done:false};
+        let months = (tgt.getFullYear()-now.getFullYear())*12+(tgt.getMonth()-now.getMonth());
+        let afterMonths = addMonths(now, months);
+        if(afterMonths>tgt){ months--; afterMonths = addMonths(now, months); }
+        let ms = tgt-afterMonths;
+        const days = Math.floor(ms/(24*60*60*1000)); ms-=days*24*60*60*1000;
+        const hours = Math.floor(ms/(60*60*1000));
+        return {months,days,hours,done:false};
       }
       function render(){
-        const now = new Date();
-        const {months, days, hours, done} = diffParts(now, target);
-        if (done){
-          elM.textContent = '00';
-          elD.textContent = '00';
-          elH.textContent = '00';
-          return true;
-        } else {
-          elM.textContent = String(months).padStart(2,'0');
-          elD.textContent = String(days).padStart(2,'0');
-          elH.textContent = String(hours).padStart(2,'0');
-          return false;
-        }
+        const now=new Date();
+        const {months,days,hours,done}=diffParts(now,target);
+        elM.textContent=String(months).padStart(2,'0');
+        elD.textContent=String(days).padStart(2,'0');
+        elH.textContent=String(hours).padStart(2,'0');
       }
-      let finished = render();
-      if (!finished){
-        const timer = setInterval(()=>{
-          if (render()){ clearInterval(timer); }
-        }, 60000);
-      }
+      render();
+      setInterval(render,60000);
     })();
 
-    // === Posiciona la mano para que apunte al centro del hotspot de música ===
+    // === Posicionar mano debajo a la izquierda del play ===
     (function(){
       const hint = document.getElementById('hint-music');
       const stage = document.querySelector('.stage');
@@ -218,40 +156,28 @@
         if(!hint || !hs || !stage) return;
         const stageRect = stage.getBoundingClientRect();
         const hsRect    = hs.getBoundingClientRect();
-
-        // Centro del hotspot
         const cx = hsRect.left + hsRect.width/2;
         const cy = hsRect.top  + hsRect.height/2;
 
-        // Colocar la mano arriba a la izquierda del centro (apuntando en diagonal hacia abajo-derecha)
-        const dx = -32;   // desplaza 28px a la izquierda del centro
-        const dy = -15;   // desplaza 18px arriba del centro
+        // Colocar mano DEBAJO a la izquierda
+        const dx = -40;  // más a la izquierda
+        const dy = +28;  // debajo del círculo
 
-        // Convertimos a coordenadas relativas del contenedor .stage
         const left = cx + dx - stageRect.left;
         const top  = cy + dy - stageRect.top;
 
         hint.style.left = `${left}px`;
         hint.style.top  = `${top}px`;
-        // Asegura el ángulo diagonal
         hint.style.transform = 'rotate(-35deg)';
       }
 
-      // Colocar al cargar recursos (incluida la imagen), al redimensionar y si cambia el scroll
       window.addEventListener('load', placeHand);
       window.addEventListener('resize', placeHand);
-      // Por si las fuentes o el layout ajustan después:
-      setTimeout(placeHand, 300);
-      setTimeout(placeHand, 1000);
+      setTimeout(placeHand,300);
+      setTimeout(placeHand,1000);
 
-      // Ocultar la mano tras reproducir o click
-      function hide(){ hint && hint.classList.add('hidden'); }
-      const link = document.querySelector('#hs-music a');
-      if (link){
-        link.addEventListener('click', hide, {once:true});
-        link.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' ') hide(); }, {once:true});
-      }
-      if (media){ media.addEventListener('play', hide, {once:true}); }
+      // Ocultar al reproducir
+      if(media){ media.addEventListener('play', ()=>hint.classList.add('hidden'), {once:true}); }
     })();
   </script>
 </body>
