@@ -5,45 +5,78 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Invitación – David & Selena</title>
   <meta name="description" content="Invitación interactiva con audio y enlaces" />
-
-  <!-- Fuentes: Oswald (números alargados) + Dancing Script (etiquetas manuscritas) -->
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Oswald:wght@500&display=swap" rel="stylesheet">
 
   <style>
     :root{ 
       --max-width: 840px;
-      --vino:#5a0a16;      /* granate más oscuro */
-      --dorado:#c9a24e;    /* dorado suave */
-      --negro:#1a1a1a;     /* etiquetas más oscuras */
+      --vino:#5a0a16;
+      --dorado:#c9a24e;
+      --negro:#1a1a1a;
     }
     *{box-sizing:border-box}
-    html,body{margin:0;background:#0b0b0b;color:#111;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    html,body{
+      margin:0;
+      background:#0b0b0b;
+      color:#111;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      overflow:hidden;
+    }
 
-    .stage{position:relative;width:min(100vw,var(--max-width));margin:16px auto;border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.35);background:#000}
+    .stage{
+      position:relative;
+      width:min(100vw,var(--max-width));
+      margin:16px auto;
+      border-radius:20px;
+      overflow:hidden;
+      box-shadow:0 10px 30px rgba(0,0,0,.35);
+      background:#000
+    }
+
     .bg{display:block;width:100%;height:auto}
 
     .hotspot{position:absolute;display:inline-block}
     .hotspot a{display:block;width:100%;height:100%;text-indent:-9999px;overflow:hidden}
 
-    .controls{position:absolute;left:50%;top:10%;transform:translateX(-50%);display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.92);border-radius:999px;padding:10px 14px;box-shadow:0 8px 24px rgba(0,0,0,.25);display:none}
+    .controls{
+      position:absolute;
+      left:50%;
+      top:10%;
+      transform:translateX(-50%);
+      display:flex;
+      gap:8px;
+      align-items:center;
+      background:rgba(255,255,255,.92);
+      border-radius:999px;
+      padding:10px 14px;
+      box-shadow:0 8px 24px rgba(0,0,0,.25);
+      display:none
+    }
+
     .btn{border:0;border-radius:999px;padding:8px 12px;cursor:pointer;background:#fff;font-weight:600}
     .btn:focus{outline:3px solid #4c9ffe;outline-offset:2px}
 
     #hs-music { left:70.6%; top:13.6%; width:2.5%; height:0.5%; }
     #hs-cal   { left:18.2%; top:33.4%; width:25%; height:0.9%; }
-    #hs-map   { left:56.3%;   top:38.7%;   width:21.5%; height:0.74%; }
-    #hs-form  { left:59.5%;   top:47.8%;   width:21.2%; height:0.83%; }
+    #hs-map   { left:56.3%; top:38.7%; width:21.5%; height:0.74%; }
+    #hs-form  { left:59.5%; top:47.8%; width:21.2%; height:0.83%; }
 
-    /* === Contador estilizado (ajustes finales) === */
     .cd-wrap{
-      position:absolute; left:0; width:100%;
-      top: calc(95% + 8px);  /* subido un espacio respecto a antes */
+      position:absolute;
+      left:0;
+      width:100%;
+      top: calc(95% + 8px);
       text-align:center;
     }
+
     .countdown{
-      display:flex; justify-content:center; align-items:baseline; gap:1rem;
+      display:flex;
+      justify-content:center;
+      align-items:baseline;
+      gap:1rem;
       font-variant-numeric:tabular-nums;
     }
+
     .cd-num{
       font-family: 'Oswald', sans-serif; 
       font-size:2.3rem; 
@@ -54,17 +87,25 @@
       min-width: 2ch;
       text-align:center;
     }
+
     .cd-label{
-      display:block; font-size:1.35rem;  /* +1 punto */
-      color:var(--negro); opacity:.95; margin-top:.18rem;
+      display:block;
+      font-size:1.35rem;
+      color:var(--negro);
+      opacity:.95;
+      margin-top:.18rem;
       font-family: 'Dancing Script', cursive;
     }
+
     .cd-sep{
-      font-size:2.3rem; font-weight:500; line-height:1;
+      font-size:2.3rem;
+      font-weight:500;
+      line-height:1;
       color:var(--vino);
       font-family: 'Oswald', sans-serif;
       transform: translateY(2px);
-      min-width: 1ch; text-align:center;
+      min-width: 1ch;
+      text-align:center;
     }
 
     @media (max-width: 420px){
@@ -74,7 +115,6 @@
       .cd-label{font-size:1.2rem}
     }
 
-    /* === Animación de parpadeo para "Ver mapa" === */
     @keyframes blink {
       0%   { box-shadow: 0 0 0px rgba(201,162,78,0.0); }
       50%  { box-shadow: 0 0 12px 4px rgba(201,162,78,0.9); }
@@ -88,9 +128,45 @@
         border-radius: 6px;
         animation: blink 1.5s infinite;
     }
+
+    /* Cortinas animadas */
+    .curtain {
+      position: fixed;
+      width: 100%;
+      height: 50%;
+      background-color: #6d071a;
+      z-index: 9999;
+      animation-duration: 2.5s;
+      animation-fill-mode: forwards;
+    }
+
+    .curtain.top {
+      top: 0;
+      animation-name: slideTop;
+    }
+
+    .curtain.bottom {
+      bottom: 0;
+      animation-name: slideBottom;
+    }
+
+    @keyframes slideTop {
+      0% { top: 0; }
+      100% { top: -50%; }
+    }
+
+    @keyframes slideBottom {
+      0% { bottom: 0; }
+      100% { bottom: -50%; }
+    }
   </style>
 </head>
 <body>
+
+  <!-- CORTINAS -->
+  <div class="curtain top"></div>
+  <div class="curtain bottom"></div>
+
   <main class="stage" aria-label="Invitación interactiva">
     <img class="bg" src="assets/Boda_8.jpg" alt="Invitación David y Selena" id="bg"/>
 
@@ -138,26 +214,39 @@
     function ensureUnmutedOnFirstPlay(){
       if (media.muted) media.muted = false;
     }
+
     function toggleMusic(){
       ensureUnmutedOnFirstPlay();
-      if(media.paused){ media.play().catch(e=>console.warn('No se pudo reproducir:', e)); }
-      else{ media.pause(); }
+      if(media.paused){
+        media.play().catch(e=>console.warn('No se pudo reproducir:', e));
+      } else {
+        media.pause();
+      }
     }
+
     if(playBtn && muteBtn){
       playBtn.addEventListener('click', async () => {
         try{
           ensureUnmutedOnFirstPlay();
-          if (media.paused){ await media.play(); playBtn.textContent='⏸︎ Pausar'; }
-          else{ media.pause(); playBtn.textContent='▶︎ Reproducir'; }
-        }catch(e){ console.warn('No se pudo reproducir:', e); }
+          if (media.paused){
+            await media.play();
+            playBtn.textContent='⏸︎ Pausar';
+          } else {
+            media.pause();
+            playBtn.textContent='▶︎ Reproducir';
+          }
+        }catch(e){
+          console.warn('No se pudo reproducir:', e);
+        }
       });
+
       muteBtn.addEventListener('click', () => {
         media.muted = !media.muted;
         muteBtn.textContent = media.muted ? '🔇' : '🔊';
       });
     }
 
-    // === Lógica contador (días y horas con cero a la izquierda) ===
+    // Contador de tiempo
     (function(){
       const target = new Date('2025-11-29T17:00:00+01:00');
       const elM = document.getElementById('cd-months');
@@ -173,6 +262,7 @@
         d.setDate(Math.min(day, lastDay));
         return d;
       }
+
       function diffParts(now, tgt){
         if (now >= tgt) return {months:0, days:0, hours:0, done:true};
         let months = (tgt.getFullYear() - now.getFullYear()) * 12 + (tgt.getMonth() - now.getMonth());
@@ -187,6 +277,7 @@
         const hours = Math.floor(ms / hourMs);
         return {months, days, hours, done:false};
       }
+
       function render(){
         const now = new Date();
         const {months, days, hours, done} = diffParts(now, target);
@@ -202,6 +293,7 @@
           return false;
         }
       }
+
       let finished = render();
       if (!finished){
         const timer = setInterval(()=>{ if (render()){ clearInterval(timer); } }, 60000);
